@@ -27,6 +27,7 @@
     "xo": "^0.17.1"
   },
   "dependencies": {
-    "debug": "^2.4.1"
+    "debug": "^2.4.1",
+    "strip-ansi": "^4.0.0"
   }
 }

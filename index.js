@@ -1,4 +1,8 @@
+const stripAnsi = require('strip-ansi')
 let hyperlayout
+
+// Cross-os new-line characters. Visualization: https://goo.gl/q501uy
+const newlines = /[\n\r]/g
 
 // Resolves an array, to find deepest cild. [[[1]]] -> 1
 const resolveArray = a => a instanceof Array ? resolveArray(a[0]) : a
@@ -157,9 +161,12 @@ exports.middleware = store => next => action => {
 
   // Check for hyperlayout config
   if (type === 'SESSION_ADD_DATA') {
-    const testedData = /^\[hyperlayout config]:(.*)/.exec(data)
-    if (testedData && testedData[1]) {
-      const config = JSON.parse(testedData[1])
+    if (/\[hyperlayout config\]/.test(data)) {
+      let dataCleaned = stripAnsi(data)
+      let configStr = dataCleaned.replace(newlines, '')
+        .substr(0, dataCleaned.lastIndexOf('}'))
+        .replace(/\[hyperlayout config\]\:/, '')
+      let config = JSON.parse(configStr)
       hyperlayout = new Hyperlayout(config, store)
       return
     }
