@@ -163,9 +163,9 @@ exports.middleware = store => next => action => {
   if (type === 'SESSION_ADD_DATA') {
     if (/\[hyperlayout config\]/.test(data)) {
       let dataCleaned = stripAnsi(data)
-      let configStr = dataCleaned.replace(newlines, '')
-        .substr(0, dataCleaned.lastIndexOf('}'))
+      let configData = dataCleaned.replace(newlines, '')
         .replace(/\[hyperlayout config\]\:/, '')
+      let configStr = configData.substring(configData.indexOf('{'), configData.lastIndexOf('}') + 1)
       let config = JSON.parse(configStr)
       hyperlayout = new Hyperlayout(config, store)
       return
